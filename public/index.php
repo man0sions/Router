@@ -1,16 +1,12 @@
-# 一个简单性感的php router
-
-
-
-### Install
-```
-composer require lucifer_p/router
-
-```
-
-### useage
-
-```
+<?php
+/**
+ * Created by PhpStorm.
+ * @author Luficer.p <81434146@qq.com>
+ * Date: 16/9/22
+ * Time: 下午3:29
+ */
+define("BASE_PATH", __DIR__);
+require BASE_PATH . '/../vendor/autoload.php';
 
 $router = \LuciferP\Base\RouterFactory::getRouter();
 
@@ -79,5 +75,3 @@ $router->all("/",function(){
 
 
 $router->run();
-
-```
