@@ -1,6 +1,6 @@
 {
     "name": "lucifer_p/router",
-    "description": "simple router from php",
+    "description": "simple router for php",
     "keywords": ["router", "php"],
     "homepage": "http://git.oschina.net/man0sions/Router",
     "license": "MIT",

@@ -2,49 +2,48 @@
 
 
 
-### Install
+## Install
 ```
 composer require lucifer_p/router
 
 ```
 
-### useage
+## useage
 
+### 1:简单用法
 ```
 
 $router = \LuciferP\Base\RouterFactory::getRouter();
 
-/**
- * 1:简单用法
- */
 
 $router->get('/hello',function(){
    return "hello";
 });
 
-/**
- * 1.1: get参数
- */
+$router->run();
 
+
+```
+
+```
+### 1.1 参数解析
+```
+//get
 $router->get('/hello/:name', function () {
     $query = $this->request['get'];
     return json_encode($query);
 });
 
-/**
- * 1.2 post参数
- */
-
+//post
 $router->post('/hello', function () {
     $query = $this->request['post'];
     return json_encode($query);
 });
 
-/**
- * 2:高级用法
- *
- */
+```
+###2:高级用法
 
+```
 /**
  * 2.1 格式化response
  * html---\LuciferP\ResponseData\HtmlData
@@ -55,6 +54,7 @@ $router->get('/user/:name/age/:age', function () {
     $query = $this->request['get'];
     return $this->response->dataformat(new \LuciferP\ResponseData\XmlData($query));
 });
+
 
 /**
  * 2.2 自定义response headers
@@ -69,15 +69,8 @@ $router->get("/404", function () {
     return $body;
 });
 
-
-
-
-$router->all("/",function(){
-    return "welcome";
-});
-
-
-
+###3.最好别忘了加上 $router->run();
+```
 $router->run();
 
 ```
