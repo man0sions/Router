@@ -13,7 +13,6 @@
     ],
     "type": "composer-plugin",
     "license": "MIT",
-    "minimum-stability": "stable",
     "require": {
         "spatie/array-to-xml": "^2.2"
     },
