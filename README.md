@@ -68,7 +68,7 @@ $router->get("/404", function () {
     return $body;
 });
 ```
-### 3.最好别忘了加上 $router->run();
+### 3.最后别忘了加上 $router->run();
 
 ```
 $router->run();
