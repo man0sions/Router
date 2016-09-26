@@ -11,7 +11,6 @@
             "role": "Developer"
         }
     ],
-    "type": "composer-plugin",
     "license": "MIT",
     "require": {
         "spatie/array-to-xml": "^2.2"
