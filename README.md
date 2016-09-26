@@ -25,7 +25,6 @@ $router->run();
 
 ```
 
-```
 ### 1.1 参数解析
 ```
 //get
@@ -41,7 +40,7 @@ $router->post('/hello', function () {
 });
 
 ```
-###2:高级用法
+### 2:高级用法
 
 ```
 /**
@@ -68,8 +67,9 @@ $router->get("/404", function () {
     $this->response->sendHeader();
     return $body;
 });
+```
+### 3.最好别忘了加上 $router->run();
 
-###3.最好别忘了加上 $router->run();
 ```
 $router->run();
 
