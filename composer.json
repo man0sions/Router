@@ -1,14 +1,11 @@
 {
-    "name": "lucifer_p/router",
+    "name": "man0sions/router",
     "description": "simple router for php",
-    "keywords": ["router", "php"],
-    "homepage": "http://git.oschina.net/man0sions/Router",
     "license": "MIT",
     "authors": [
         {
-            "name": "lucifer.p",
-            "homepage": "http://git.oschina.net/man0sions/",
-            "role": "Developer"
+            "name": "Lucifer.p",
+            "email": "81434146@qq.com"
         }
     ],
     "require": {
@@ -24,6 +21,5 @@
         "psr-4": {
             "LuciferP\\": "src"
         }
-    },
-    "version": "1.0.0"
+    }
 }
