@@ -2,6 +2,7 @@
     "name": "man0sions/router",
     "description": "simple router for php",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Lucifer.p",
