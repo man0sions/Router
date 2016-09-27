@@ -7,7 +7,13 @@
 composer require man0sions/router
 
 ```
-
+## Run Demo
+```
+ 1:git clone https://git.oschina.net/man0sions/Router.git
+ 2:php -S 127.0.0.1:8080 public/index.php 
+ 3:在浏览器访问: http://localhost:8080/hello/myname
+ 
+```
 ## useage
 
 ### 1:简单用法
