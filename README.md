@@ -4,7 +4,7 @@
 
 ## Install
 ```
-composer require lucifer_p/router
+composer require man0sions/router
 
 ```
 
