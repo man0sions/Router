@@ -18,8 +18,7 @@ class HtmlData extends DataFormat
     {
         if(!is_string($this->data))
             $this->data = var_export($this->data);
-        $response->setResponseContentType("text/html");
-        $response->setResponseBody($this->data);
+
         return $this->data;
     }
 }

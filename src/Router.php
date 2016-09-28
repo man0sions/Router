@@ -30,21 +30,18 @@ class Router
     /**
      * @var array
      */
-    private $requestType = [];
+    private $isRouter = false;
 
     /**
      * Router constructor.
      * @param Request $request
      */
-    public function __construct(Request $request, Response $response,ResloveRequest $resloveRequest)
+    public function __construct(Request $request, Response $response, ResloveRequest $resloveRequest)
     {
         $this->request = $request;
         $this->response = $response;
         $this->resloveRequest = $resloveRequest;
-
-
     }
-
 
 
     /**
@@ -62,44 +59,21 @@ class Router
     {
 
 
-        foreach ($this->routers as $path => $router) {
-            $request = $this->resloveRequest->resloveRequest($this, $path, $router);
-
-
-            if ($request && preg_match("/" . $this->request['method'] . "/i", $this->requestType[$path])
-            ) {
-                $body = $router();
-
-                echo $body;
-                exit();
+        foreach ($this->routers as $key => $router) {
+            $valid = $this->resloveRequest->resloveRequest($this, $key, $router);
+            if ($valid) {
+                $router($this->request, $this->response);
+                $this->isRouter = true;
+                break;
             }
-            if (preg_match("#all#", $this->requestType[$path])) {
-                $body = $router();
-                echo $body;
-                exit();
-            }
-
         }
-    }
 
-    /**
-     * @param $path
-     * @return null
-     */
-    public function getRequestType($path)
-    {
-        return isset($this->requestType[$path]) ? $this->requestType[$path] : null;
+        if (!$this->isRouter) {
+            $this->response->status(404)->send("not found");
+        }
 
     }
 
-    /**
-     * @param $path
-     */
-    public function redirect($path)
-    {
-        header("location:$path");
-        exit();
-    }
 
     /**
      * @param $path
@@ -107,9 +81,9 @@ class Router
      */
     public function get($path, \Closure $closure)
     {
-        $this->requestType[$path] = __METHOD__;
 
-        $this->routers[$path] = $closure->bindTo($this, __CLASS__);
+        $this->doRouter(__METHOD__, $path, $closure);
+
     }
 
     /**
@@ -118,9 +92,7 @@ class Router
      */
     public function post($path, \Closure $closure)
     {
-        $this->requestType[$path] = __METHOD__;
-
-        $this->routers[$path] = $closure->bindTo($this, __CLASS__);
+        $this->doRouter(__METHOD__, $path, $closure);
 
     }
 
@@ -130,7 +102,33 @@ class Router
      */
     public function all($path, \Closure $closure)
     {
-        $this->requestType[$path] = __METHOD__;
-        $this->routers[$path] = $closure->bindTo($this, __CLASS__);
+        $this->doRouter(__METHOD__, $path, $closure);
+
+    }
+
+    /**
+     * @param $path
+     * @param \Closure $closure
+     * @param array $user
+     */
+    public function auth($path, \Closure $closure, $user = ['name' => 'admin', 'passwd' => 'admin'])
+    {
+
+        $name = $_SERVER['PHP_AUTH_USER'];
+        $passwd = $_SERVER['PHP_AUTH_PW'];
+        if (!($name == $user['name'] && $passwd == $user['passwd'])) {
+            header('WWW-Authenticate: Basic realm="My Realm"');
+            header('HTTP/1.0 401 Unauthorized');
+            exit;
+        } else {
+
+            $this->doRouter(__METHOD__, $path, $closure);
+        }
+    }
+
+    private function doRouter($method, $path, $closure)
+    {
+        $params = $method . '###' . $path;
+        $this->routers[$params] = $closure->bindTo($this, __CLASS__);
     }
 }

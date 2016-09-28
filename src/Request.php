@@ -9,15 +9,16 @@ namespace LuciferP;
  */
 class Request implements \IteratorAggregate, \ArrayAccess
 {
-    private $get;
-    private $post;
-    private $cookies;
-    private $env;
-    private $server = [];
-    private $requests = [];
-    private $homeUrl;
-    private $url;
-    private $uri;
+    public $get;
+    public $post;
+    public $cookies;
+    public $env;
+    public $server = [];
+    public $requests = [];
+    public $homeUrl;
+    public $url;
+    public $uri;
+    public $method;
 
     /**
      * Request constructor.
@@ -29,17 +30,19 @@ class Request implements \IteratorAggregate, \ArrayAccess
         $this->post = $this->filter($_POST, INPUT_POST);
         $this->cookies = $this->filter($_COOKIE, INPUT_COOKIE);
         $this->env = $this->filter($_ENV, INPUT_ENV);
-        $this->server = $this->filter($_SERVER, INPUT_SERVER);
+//        $this->server = $this->filter($_SERVER, INPUT_SERVER);
+        $this->server = $_SERVER;
         $this->homeUrl = $this->getHomeUrl();
         $this->url = $this->getUrl();
         $this->uri = $this->server['REQUEST_URI'];
-        $this->requests['get'] = $this->get;
-        $this->requests['post'] = $this->post;
-        $this->requests['cookies'] = $this->cookies;
-        $this->requests['url'] = $this->url;
-        $this->requests['uri'] = $this->uri;
-        $this->requests['homeUrl'] = $this->homeUrl;
-        $this->requests['method'] = $this->server['REQUEST_METHOD'];
+        $this->method = $this->server['REQUEST_METHOD'];
+//        $this->requests['get'] = $this->get;
+//        $this->requests['post'] = $this->post;
+//        $this->requests['cookies'] = $this->cookies;
+//        $this->requests['url'] = $this->url;
+//        $this->requests['uri'] = $this->uri;
+//        $this->requests['homeUrl'] = $this->homeUrl;
+//        $this->requests['method'] = $this->server['REQUEST_METHOD'];
 //        $this->requests['server'] = $this->server;
 
     }
@@ -87,20 +90,23 @@ class Request implements \IteratorAggregate, \ArrayAccess
         $this->requests['get'] = $get;
 
     }
+
+
+
     function getIterator()
     {
-        return new \ArrayIterator($this->requests);
+        return new \ArrayIterator($this);
     }
 
 
     function offsetExists($offset)
     {
-        return isset($this->requests[$offset]);
+        return isset($this->$offset);
     }
 
     function offsetGet($offset)
     {
-        return $this->requests[$offset];
+        return $this->$offset;
     }
 
     function offsetSet($offset, $value)

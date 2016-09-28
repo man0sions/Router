@@ -10,30 +10,42 @@ require BASE_PATH . '/../vendor/autoload.php';
 
 $router = \LuciferP\Base\RouterFactory::getRouter();
 
+
 /**
  * 1:简单用法
+ * $res->status() 设置返回码[默认200] 200,404,500 ...
+ * $res->type()   设置返回类型[默认 text/html] text/json...
+ * $res->json()   在页面输出json
+ * $res->jsonp()  在页面输出jsonp
+ * $res->render() 把数据渲染到指定的页面
  */
 
-$router->get('/hello',function(){
-   return "hello";
+$router->get('/home', function (\LuciferP\Request $req, \LuciferP\Response $res) {
+
+//  $res->status(200)->send(json_encode($req));
+//  $res->type('text/json')->send(json_encode($req));
+//  $res->json(['hello'=>'world']);
+//  $res->jsonp(['hello'=>'world']);
+//  $res->redirect("http://baidu.com");
+    $res->status(200)->type('text/html')->render(BASE_PATH . "/../views/view.php", ['name' => 'zhangsan', 'age' => 20]);
 });
 
 /**
  * 1.1: get参数
  */
 
-$router->get('/hello/:name', function () {
-    $query = $this->request['get'];
-    return json_encode($query);
+$router->get('/hello/:name', function ($req, $res) {
+    $query = $req['get'];
+    $res->json($query);
 });
 
 /**
  * 1.2 post参数
  */
 
-$router->post('/hello', function () {
-    $query = $this->request['post'];
-    return json_encode($query);
+$router->post('/hello', function ($req, $res) {
+    $query = $req['post'];
+    $res->json($query);
 });
 
 /**
@@ -42,36 +54,36 @@ $router->post('/hello', function () {
  */
 
 /**
- * 2.1 格式化response
+ * 2.1 auth
+ * 用户名密码默认为:admin,admin
+ */
+$router->auth("/auth", function ($req, $res) {
+
+    $res->send("欢迎回来");
+
+
+}, ['name' => 'admin', 'passwd' => 'admin']);
+
+
+/**
+ * 2.2 格式化response
  * html---\LuciferP\ResponseData\HtmlData
  * json---\LuciferP\ResponseData\JsonData
  * xml----\LuciferP\ResponseData\XmlData
  */
-$router->get('/user/:name/age/:age', function () {
-    $query = $this->request['get'];
-    return $this->response->dataformat(new \LuciferP\ResponseData\XmlData($query));
+$router->get('/name/:name/age/:age', function ($req, $res) {
+    $query = $req['get'];
+    $xml = $res->dataformat(new \LuciferP\ResponseData\XmlData($query));
+    $res->type("text/xml")->send($xml);
 });
+
 
 /**
- * 2.2 自定义response headers
- * 详细使用方法查看\LuciferP\Response
+ * 2.3 指定所有[get,post]请求 "/"
  */
-
-$router->get("/404", function () {
-    $body = "404 not found";
-    $this->response->setResponseCode(404);
-    $this->response->setResponseBody($body);
-    $this->response->sendHeader();
-    return $body;
+$router->all("/", function ($req, $res) {
+    $res->send("all page");
 });
-
-
-
-
-$router->all("/",function(){
-    return "welcome";
-});
-
 
 
 $router->run();

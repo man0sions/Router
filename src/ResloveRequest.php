@@ -25,10 +25,12 @@ class ResloveRequest
      * @param \Closure $closure
      * @return bool
      */
-    public function resloveRequest(Router $router, $path, \Closure $closure)
+    public function resloveRequest(Router $router, $str, \Closure $closure)
     {
+        list($method, $path) = preg_split("/###/", $str);
+
         $this->request = $router->getRequest();
-        if (!$this->checkRequestIsValid($router,$path)) {
+        if (!$this->checkRequestIsValid($router, $path, $method)) {
             return false;
         }
 
@@ -51,16 +53,35 @@ class ResloveRequest
      * @param $path
      * @return bool
      */
-    private function checkRequestIsValid($router,$path)
+    private function checkRequestIsValid($router, $path, $method)
     {
-        if(preg_match("#all#",$router->getRequestType($path)))
-            return true;
 
-        if(!preg_match("#:[0-9a-zA-Z_]+#",$path))
+        if (preg_match("#(all)|(auth)#", $method)) {
             return true;
+        }
+
+        if(!$this->checkRequestMethodEqual($method))
+            return false;
+
+        if (!preg_match("#:[0-9a-zA-Z_]+#", $path)) {
+            return true;
+        }
         $pattern = preg_replace("#:[0-9a-zA-Z_]+#", "[0-9a-zA-Z_]+", $path);
         preg_match("#" . $pattern . "#", $this->request['url'], $m);
         if ($m) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * @param $method
+     * @return bool
+     */
+    private function checkRequestMethodEqual($method)
+    {
+        if (preg_match("#" . preg_quote($this->request['method']) . "#i", $method)) {
             return true;
         }
         return false;

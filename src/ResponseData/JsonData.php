@@ -17,8 +17,7 @@ class JsonData extends DataFormat
     public function format(Response $response)
     {
         $data = json_encode($this->data);
-        $response->setResponseContentType("text/json");
-        $response->setResponseBody($data);
+
         return $data;
     }
 }

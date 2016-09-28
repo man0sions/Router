@@ -20,8 +20,7 @@ class XmlData extends DataFormat
         if(!is_array($this->data))
             $this->data = (array)($this->data);
         $xml = ArrayToXml::convert($this->data);
-        $response->setResponseContentType("text/xml");
-        $response->setResponseBody($xml);
+
         return $xml;
     }
 }
